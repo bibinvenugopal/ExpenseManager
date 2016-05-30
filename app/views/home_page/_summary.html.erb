@@ -1,0 +1,103 @@
+<%
+common_expenses = get_common_expenses(@month, @year)
+adjustment_expenses = get_adjustment_reasons_for(@month, @year)
+personal_expenses = get_personal_expense_for(@month, @year)
+%>
+
+<table border="1">
+  <thead>
+    <th>Reason</th>
+    <%all_user_users.each do |user|%>
+      <th><%=user_name(user)%></th>
+    <%end%>
+    <th>Total</th>
+  </thead>
+  <tbody>
+    <%total_array = []%>
+    <!-- Common expeses -->
+    <%unless common_expenses.empty?%>
+      <tr>
+        <td colspan="<%=all_user_users.size + 2%>" aling="center"> <b>Common expenses </b></td>
+      </tr>
+      <%common_expenses.each do |expense|%> 
+        <tr>
+          <td><%=expense.reason%></td>
+          <%total = 0%>
+          <%i=0%>
+          <%expense.expense_tos.each do |exp|%>
+            <td><%=exp.amount.try(:round, 2)%></td>
+            <%total = total + exp.amount%>
+            <%total_array[i] = total_array[i].to_f + exp.amount; i += 1 %>
+          <%end%>
+          <td><%=total.try(:round, 2)%></td>
+        </tr>
+      <%end%>
+      <tr>
+        <td><b>Total</b></td>
+        <%total_array.each do |amount|%>
+          <td><b><%=amount.try(:round, 2)%></b></td>
+        <%end%>
+        <td><b><%=total_array.inject(:+).try(:round, 2)%></b></td>
+      </tr>
+    <%end%>
+    <!-- Common expeses -->
+    
+    <!-- Adjustments -->
+    <%unless adjustment_expenses.empty?%>
+      <tr>
+        <td colspan="<%=all_user_users.size + 2%>" aling="center"> <b> Adjustments </b></td>
+      </tr>
+      <%adjustment_expenses.each do |expense|%> 
+        <tr>
+          <td><%=expense.reason%></td>
+          <%total = 0%>
+          <%i=0%>
+          <%expense.expense_tos.each do |exp|%>
+            <td><%=exp.amount.try(:round, 2)%></td>
+            <%total = total + exp.amount%>
+            <%total_array[i] = total_array[i].to_f + exp.amount; i += 1 %>
+          <%end%>
+          <td><%=total.try(:round, 2)%></td>
+        </tr>
+      <%end%>
+      <tr>
+        <td><b>Total</b></td>
+        <%total_array.each do |amount|%>
+          <td><b><%=amount.try(:round, 2)%></b></td>
+        <%end%>
+        <td><b><%=total_array.inject(:+).try(:round, 2)%></b></td>
+      </tr>
+    <%end%>
+    <!-- Adjustments -->
+    
+    <!-- Personal expenses -->
+    <%personal_expenses.each do |user, expenses|%>
+      <%unless expenses.empty?%>
+        <tr>
+          <td colspan="<%=all_user_users.size + 2%>" aling="center"> <b> Expenses of <%=user.name%> </b></td>
+        </tr>
+        <%expenses.each do |expense|%> 
+          <tr>
+            <td><%=expense.reason%></td>
+            <%total = 0%>
+            <%i=0%>
+            <%expense.expense_tos.each do |exp|%>
+              <td><%=exp.amount.try(:round, 2)%></td>
+              <%total = total + exp.amount%>
+              <%total_array[i] = total_array[i].to_f + exp.amount; i += 1 %>
+            <%end%>
+            <td><%=total.try(:round, 2)%></td>
+          </tr>
+        <%end%>
+        <tr>
+          <td><b>Total</b></td>
+          <%total_array.each do |amount|%>
+            <td><b><%=amount.try(:round, 2)%></b></td>
+          <%end%>
+          <td><b><%=total_array.inject(:+).try(:round, 2)%></b></td>
+        </tr>
+      <%end%>
+    <%end%>
+    <!-- Personal expenses -->
+  </tbody>
+</table>

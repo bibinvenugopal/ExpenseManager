@@ -1,0 +1,24 @@
+<%=form_tag("", method: :get, id: :home_page) do %>
+  <%=select_tag "year", options_for_select(years, @year), :onchange => "this.form.submit();"%>
+  <%=select_tag "month", options_for_select(months, @month), :onchange => "this.form.submit();"%>
+  <% all_users.each do |user|%>
+    <br/>
+    <%= link_to user.name, "#", {onclick: "send_values(#{user.id})"}%>
+  <%end%>
+  <br/>
+  <%if @current_page_for%>
+    <br/>
+    <% if @current_page_for.user_type == 1%>
+      <%= render partial: "user_expense"%>
+    <%elsif @current_page_for.user_type == 2%>
+      <%= render partial: "adjustment"%>
+    <%elsif @current_page_for.user_type == 4%>
+        <%= render partial: "summary"%>
+    <%else%>
+      <%= render partial: "expense"%>
+    <%end%>
+  <%else%>
+    
+  <%end%>
+  <input id="page" type="hidden" name="page" value="<%=@current_page_for.id%>">
+<%end%>

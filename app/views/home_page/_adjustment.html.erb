@@ -1,0 +1,36 @@
+Details of Adjustment
+<br/>
+Reason: <input type="text" name="reason"/>
+Amount: <input type="text" name="amount"/>
+<%all_user_users.each do |user|%>
+  <br/>
+  <label><%=check_box_tag("expense_to[users][]", user.id, @expense_to.try(:include?, user.id.to_s))%><%=user.name%></label>
+<%end%>
+<input type="hidden" name="common_expense" value="1">
+<br/>
+<%=submit_tag "Submit"%>
+<table border="1">
+  <thead>
+    <th>Reason</th>
+    <%all_user_users.each do |user|%>
+      <th><%=user.name%></th>
+    <%end%>
+    <th>Total</th>
+  </thead>
+  <tbody>
+    <%@user_spendings.each do |spending|%>
+      <tr>
+        <td><%=spending.reason%></td>
+        <%total = 0%>
+        <%spending.expense_tos.each do |exp|%>
+          <td><%=exp.amount.try(:round, 2)%></td>
+          <%total = total + exp.amount%>
+        <%end%>
+        <td><%=total.try(:round, 2)%></td>
+        <td>
+          <%= link_to "Remove", controller: "home_page", action: "remove", id: spending.id, page:@current_page_for.id %>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
